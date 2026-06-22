@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bewcastle</title>
+
+    <link rel="stylesheet" href="/bewcastle/assets/css/main.css" />
+  <link rel="stylesheet" href="/bewcastle/3dhop/stylesheet/3dhop.css" />
+  <link rel="icon" type="image/x-icon" href="/bewcastle/img/cross.ico" />
+
+  <script src="/bewcastle/3dhop/js/spidergl.js"></script>
+  <script src="/bewcastle/3dhop/js/jquery.js"></script>
+  <script src="/bewcastle/3dhop/js/presenter.js"></script>
+  <script src="/bewcastle/3dhop/js/nexus.js"></script>
+  <script src="/bewcastle/3dhop/js/ply.js"></script>
+
+  <script src="/bewcastle/3dhop/js/trackball_sphere.js"></script>
+  <script src="/bewcastle/3dhop/js/trackball_turntable.js"></script>
+  <script src="/bewcastle/3dhop/js/trackball_turntable_pan.js"></script>
+  <script src="/bewcastle/3dhop/js/trackball_pantilt.js"></script>
+
+  <script src="/bewcastle/3dhop/js/init.js"></script>
+</head>
+
+<body>
+  <header class="header">
+    <a href="/frontmatter/home.html">
+      <img src="/bewcastle/assets/img/head.jpg" alt="">
+      <div class="header-text">Bewcastle</div>
+    </a>
+  </header>
+
+  <input type="checkbox" id="menu-toggle" class="menu-toggle">
+
+  <nav class="landing-nav" aria-label="Main navigation">
+    <a href="/frontmatter/home.html">Home</a>
+    <a href="/ruthwell/intro.html">Ruthwell</a>
+    <a href="/bewcastle/intro.html">Bewcastle</a>
+    <a href="/brussels/intro.html">Brussels</a>
+
+    <label for="menu-toggle" class="menu-link">
+      Menu ☰
+    </label>
+  </nav>
+
+  <nav class="landing-menu" aria-label="Expanded menu">
+    <section>
+      <input type="checkbox" id="frontmatter-toggle" class="submenu-toggle">
+      <label for="frontmatter-toggle" class="submenu-label">Frontmatter</label>
+      <div class="submenu">
+        <a href="/frontmatter/home.html">Home</a>
+        <a href="/frontmatter/history.html">History of the Project</a>
+        <a href="/frontmatter/connections.html">Connections Between Crosses</a>
+      </div>
+    </section>
+
+    <section>
+      <input type="checkbox" id="ruthwell-toggle" class="submenu-toggle">
+      <label for="ruthwell-toggle" class="submenu-label">Ruthwell</label>
+      <div class="submenu">
+        <a href="/ruthwell/intro.html">Introduction</a>
+        <a href="/ruthwell/model.html">Ruthwell Model</a>
+        <a href="/ruthwell/history.html">History of The Ruthwell Cross</a>
+        <a href="/ruthwell/iconography.html">Iconography of the Ruthwell Cross</a>
+        <a href="/ruthwell/scan.html">Scanning Ruthwell</a>
+      </div>
+    </section>
+
+    <section>
+      <input type="checkbox" id="bewcastle-toggle" class="submenu-toggle">
+      <label for="bewcastle-toggle" class="submenu-label">Bewcastle</label>
+      <div class="submenu">
+        <a href="/bewcastle/intro.html">Introduction</a>
+        <a href="/bewcastle/model.html">Bewcastle Model</a>
+        <a href="/bewcastle/scan.html">Scanning Bewcastle</a>
+      </div>
+    </section>
+
+    <section>
+      <input type="checkbox" id="brussels-toggle" class="submenu-toggle">
+      <label for="brussels-toggle" class="submenu-label">Brussels</label>
+      <div class="submenu">
+        <a href="/brussels/intro.html">Introduction</a>
+        <a href="/brussels/model.html">Brussels Model</a>
+        <a href="/brussels/scan.html">Scanning Brussels</a>
+      </div>
+    </section>
+
+    <section>
+      <input type="checkbox" id="backmatter-toggle" class="submenu-toggle">
+      <label for="backmatter-toggle" class="submenu-label">Backmatter</label>
+      <div class="submenu">
+        <a href="/backmatter/table.html">Table of Contents</a>
+        <a href="/backmatter/research.html">Research &amp; Media</a>
+        <a href="/backmatter/glossary.html">Glossary</a>
+        <a href="/backmatter/contact.html">Contact</a>
+      </div>
+    </section>
+  </nav>
+
+  <main>
+    <div class="viewer-layout">
+      <div id="viewerWrap">
+        <div id="3dhop" class="tdhop" onmousedown="if (event.preventDefault) event.preventDefault()">
+          <div id="tdhlg"></div>
+
+          <div id="toolbar">
+            <img id="home" title="Clear State" src="/bewcastle/3dhop/skins/dark/home.png" onclick="actionsToolbar('home')" /><br/>
+            <img id="zoomin" title="Zoom In" src="/bewcastle/3dhop/skins/dark/zoomin.png" onclick="actionsToolbar('zoomin')" /><br/>
+            <img id="zoomout" title="Zoom Out" src="/bewcastle/3dhop/skins/dark/zoomout.png" onclick="actionsToolbar('zoomout')" /><br/>
+            <img id="light" title="Enable Light Control" src="/bewcastle/3dhop/skins/dark/lightcontrol.png" onclick="actionsToolbar('light')" /><br/>
+            <img id="screenshot" title="Save Screenshot" src="/bewcastle/3dhop/skins/dark/screenshot.png" onclick="actionsToolbar('screenshot')" /><br/>
+            <img id="full" title="Full Screen" src="/bewcastle/3dhop/skins/dark/full.png" onclick="actionsToolbar('full')" />
+          </div>
+
+          <div id="loadingOverlay">
+            <div class="loading-box">
+              <div class="spinner"></div>
+              <p id="loadingText">Loading model…</p>
+            </div>
+          </div>
+
+          <div id="movePad" aria-label="Move view">
+            <table id="mvc_table">
+              <tbody>
+                <tr>
+                  <td>
+                    <img class="move_ up" id="move_up" title="Move Up" src="/bewcastle/assets/img/Arrow.png" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <img class="move_ down" id="move_down" title="Move Down" src="/bewcastle/assets/img/Arrow.png" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <button id="fullscreen-btn" title="Toggle Full Screen" onclick="toggleFullscreen()">
+            <img src="/bewcastle/3dhop/skins/dark/full.png" alt="Full Screen" />
+          </button>
+
+          <canvas id="draw-canvas"></canvas>
+        </div>
+      </div>
+
+      <aside id="infoPanel">
+        <div class="side-tabs">
+          <button class="tab-button active" type="button" onclick="openInfoTab('panels')">
+            Panels
+          </button>
+
+          <button class="tab-button" type="button" onclick="openInfoTab('poem')">
+            Runes
+          </button>
+        </div>
+
+        <div id="panels-content" class="tab-content active">
+          <section class="panel-section">
+            <h2>Explore the Bewcastle Cross</h2>
+
+            <p class="panel-intro">
+              Select a direction to turn the model. Select a panel name to highlight it on the cross.
+            </p>
+
+            <div class="direction-row">
+              <button class="direction-card active" type="button" data-direction="front" onclick="setActiveDirection('front')">
+                <span>Front</span>
+              </button>
+
+              <button class="direction-card" type="button" data-direction="back" onclick="setActiveDirection('back')">
+                <span>Back</span>
+              </button>
+
+              <button class="direction-card" type="button" data-direction="left" onclick="setActiveDirection('left')">
+                <span>Left</span>
+              </button>
+
+              <button class="direction-card" type="button" data-direction="right" onclick="setActiveDirection('right')">
+                <span>Right</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="panel-section">
+            <div class="panel-links">
+              <div class="panel-item" data-panel-id="none">
+                <button type="button" class="panel-name" onclick="clearPanelSelection()">
+                  None
+                </button>
+                <p>Clear the selected highlight.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel-section">
+            <h3>South Panels</h3>
+
+            <div class="panel-links">
+              <div class="panel-item" data-panel-id="south_top_inter">
+                <button type="button" class="panel-name" onclick="highlightPanel('south_top_inter')" onmouseover="hoverPanel('south_top_inter')" onmouseout="unhoverPanel()">
+                  Top Interlace
+                </button>
+                <p>Click <a href="panels/south_top_interlace.html">here</a> to view in detail.</p>
+              </div>
+
+              <div class="panel-item" data-panel-id="south_sundial">
+                <button type="button" class="panel-name" onclick="highlightPanel('south_sundial')" onmouseover="hoverPanel('south_sundial')" onmouseout="unhoverPanel()">
+                  Upper Vinescroll and Sundial
+                </button>
+                <p>Click <a href="panels/south_upper_vinescroll_sundial.html">here</a> to view in detail.</p>
+              </div>
+
+              <div class="panel-item" data-panel-id="south_mid_inter">
+                <button type="button" class="panel-name" onclick="highlightPanel('south_mid_inter')" onmouseover="hoverPanel('south_mid_inter')" onmouseout="unhoverPanel()">
+                  Middle Interlace
+                </button>
+                <p>Click <a href="panels/south_middle_interlace.html">here</a> to view in detail.</p>
+              </div>
+
+              <div class="panel-item" data-panel-id="south_low_vine">
+                <button type="button" class="panel-name" onclick="highlightPanel('south_low_vine')" onmouseover="hoverPanel('south_low_vine')" onmouseout="unhoverPanel()">
+                  Lower Vinescroll
+                </button>
+                <p>Click <a href="panels/south_lower_vinescroll.html">here</a> to view in detail.</p>
+              </div>
+
+              <div class="panel-item" data-panel-id="south_bot_inter">
+                <button type="button" class="panel-name" onclick="highlightPanel('south_bot_inter')" onmouseover="hoverPanel('south_bot_inter')" onmouseout="unhoverPanel()">
+                  Bottom Interlace
+                </button>
+                <p>Click <a href="panels/south_bottom_interlace.html">here</a> to view in detail.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel-section">
+            <h3>West Panels</h3>
+
+            <div class="panel-links">
+              <div class="panel-item" data-panel-id="agnus">
+                <button type="button" class="panel-name" onclick="highlightPanel('agnus')" onmouseover="hoverPanel('agnus')" onmouseout="unhoverPanel()">
+                  Agnus Dei
+                </button>
+                <p>Click <a href="panels/west_lamb.html">here</a> to view in detail.</p>
+              </div>
+
+              <div class="panel-item" data-panel-id="christ">
+                <button type="button" class="panel-name" onclick="highlightPanel('christ')" onmouseover="hoverPanel('christ')" onmouseout="unhoverPanel()">
+                  Christ
+                </button>
+                <p>Click <a href="panels/west_christ.html">here</a> to view in detail.</p>
+              </div>
+
+              <div class="panel-item" data-panel-id="falconer">
+                <button type="button" class="panel-name" onclick="highlightPanel('falconer')" onmouseover="hoverPanel('falconer')" onmouseout="unhoverPanel()">
+                  Falconer
+                </button>
+                <p>Click <a href="panels/west_falconer.html">here</a> to view in detail.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel-section">
+            <h3>North Panels</h3>
+
+            <div class="panel-links">
+              <div class="panel-item" data-panel-id="north_top_vine">
+                <button type="button" class="panel-name" onclick="highlightPanel('north_top_vine')" onmouseover="hoverPanel('north_top_vine')" onmouseout="unhoverPanel()">
+                  Top Vinescroll
+                </button>
+                <p>Click <a href="panels/north_top_vinescroll.html">here</a> to view in detail.</p>
+              </div>
+
+              <div class="panel-item" data-panel-id="north_upper_inter">
+                <button type="button" class="panel-name" onclick="highlightPanel('north_upper_inter')" onmouseover="hoverPanel('north_upper_inter')" onmouseout="unhoverPanel()">
+                  Upper Interlace
+                </button>
+                <p>Click <a href="panels/north_upper_interlace.html">here</a> to view in detail.</p>
+              </div>
+
+              <div class="panel-item" data-panel-id="north_checkers">
+                <button type="button" class="panel-name" onclick="highlightPanel('north_checkers')" onmouseover="hoverPanel('north_checkers')" onmouseout="unhoverPanel()">
+                  Checkers
+                </button>
+                <p>Click <a href="panels/north_checkers.html">here</a> to view in detail.</p>
+              </div>
+
+              <div class="panel-item" data-panel-id="north_lower_inter">
+                <button type="button" class="panel-name" onclick="highlightPanel('north_lower_inter')" onmouseover="hoverPanel('north_lower_inter')" onmouseout="unhoverPanel()">
+                  Lower Interlace
+                </button>
+                <p>Click <a href="panels/north_lower_interlace.html">here</a> to view in detail.</p>
+              </div>
+
+              <div class="panel-item" data-panel-id="north_bot_vine">
+                <button type="button" class="panel-name" onclick="highlightPanel('north_bot_vine')" onmouseover="hoverPanel('north_bot_vine')" onmouseout="unhoverPanel()">
+                  Bottom Vinescroll
+                </button>
+                <p>Click <a href="panels/north_bottom_vinescroll.html">here</a> to view in detail.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel-section">
+            <h3>East Panels</h3>
+
+            <div class="panel-links">
+              <div class="panel-item" data-panel-id="vine_cut">
+                <button type="button" class="panel-name" onclick="highlightPanel('vine_cut')" onmouseover="hoverPanel('vine_cut')" onmouseout="unhoverPanel()">
+                  Inhabited Vinescroll
+                </button>
+                <p>Click <a href="panels/east_inhabited_vinescroll.html">here</a> to view in detail.</p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div id="poem-content" class="tab-content">
+          <section class="panel-section">
+            <h2>The Poem</h2>
+
+            <p>
+              This section can contain the poetic inscription, transcription, translation, or commentary.
+            </p>
+          </section>
+        </div>
+      </aside>
+    </div>
+
+    <script>
+      var presenter = null;
+      var activeSpot = null;
+
+      var spotIds = [
+        "south_top_inter",
+        "south_sundial",
+        "south_mid_inter",
+        "south_low_vine",
+        "south_bot_inter",
+
+        "agnus",
+        "christ",
+        "falconer",
+
+        "north_top_vine",
+        "north_upper_inter",
+        "north_checkers",
+        "north_lower_inter",
+        "north_bot_vine",
+
+        "vine_cut"
+      ];
+
+      function setup3dhop() {
+        presenter = new Presenter("draw-canvas");
+
+        presenter.setScene({
+          meshes: {
+            bewcastle: { url: "/bewcastle/assets/models/bewcastle.nxz" },
+
+            south_top_inter: { url: "/bewcastle/assets/models/south_top_Inter_cut.nxz" },
+            south_sundial:   { url: "/bewcastle/assets/models/south_sundial_cut.nxz" },
+            south_mid_inter: { url: "/bewcastle/assets/models/south_mid_inter_cut.nxz" },
+            south_low_vine:  { url: "/bewcastle/assets/models/south_low_vine_cut.nxz" },
+            south_bot_inter: { url: "/bewcastle/assets/models/south_bot_inter_cut.nxz" },
+
+            agnus:    { url: "/bewcastle/assets/models/agnus_cut.nxz" },
+            christ:   { url: "/bewcastle/assets/models/christ_cut.nxz" },
+            falconer: { url: "/bewcastle/assets/models/falconer_cut.nxz" },
+
+            north_top_vine:  { url: "/bewcastle/assets/models/north_top_vine_cut.nxz" },
+            north_upper_inter: { url: "/bewcastle/assets/models/north_upper_inter_cut.nxz" },
+            north_checkers: { url: "/bewcastle/assets/models/north_checkers_cut.nxz" },
+            north_lower_inter: { url: "/bewcastle/assets/models/north_lower_inter_cut.nxz" },
+            north_bot_vine:    { url: "/bewcastle/assets/models/north_bot_vine_cut.nxz" },
+
+            vine_cut: { url: "/bewcastle/assets/models/vine_cut.nxz" }
+          },
+
+          modelInstances: {
+            bewcastle: {
+              mesh: "bewcastle",
+              color: [0.8, 0.7, 0.75],
+              visible: true
+            }
+          },
+
+        spots: {
+          south_top_inter: {
+            mesh: "south_top_inter",
+            visible: false,
+            alpha: 0.65,
+            color: [0.0, 0.25, 1.0]
+          },
+
+          south_sundial: {
+            mesh: "south_sundial",
+            visible: false,
+            alpha: 0.65,
+            color: [0.0, 0.25, 1.0]
+          },
+
+          south_mid_inter: {
+            mesh: "south_mid_inter",
+            visible: false,
+            alpha: 0.65,
+            color: [0.0, 0.25, 1.0]
+          },
+
+          south_low_vine: {
+            mesh: "south_low_vine",
+            visible: false,
+            alpha: 0.65,
+            color: [0.0, 0.25, 1.0]
+          },
+
+          south_bot_inter: {
+            mesh: "south_bot_inter",
+            visible: false,
+            alpha: 0.65,
+            color: [0.0, 0.25, 1.0]
+          },
+
+          agnus: {
+            mesh: "agnus",
+            visible: false,
+            alpha: 0.65,
+            color: [0.0, 0.25, 1.0]
+          },
+
+          christ: {
+            mesh: "christ",
+            visible: false,
+            alpha: 0.65,
+            color: [0.0, 0.25, 1.0]
+          },
+
+          falconer: {
+            mesh: "falconer",
+            visible: false,
+            alpha: 0.65,
+            color: [0.0, 0.25, 1.0]
+          },
+
+          north_top_vine: {
+            mesh: "north_top_vine",
+            visible: false,
+            alpha: 0.65,
+            color: [0.0, 0.25, 1.0]
+          },
+
+          north_upper_inter: {
+            mesh: "north_upper_inter",
+            visible: false,
+            alpha: 0.65,
+            color: [0.0, 0.25, 1.0]
+          },
+
+          north_checkers: {
+            mesh: "north_checkers",
+            visible: false,
+            alpha: 0.65,
+            color: [0.0, 0.25, 1.0]
+          },
+
+          north_lower_inter: {
+            mesh: "north_lower_inter",
+            visible: false,
+            alpha: 0.65,
+            color: [0.0, 0.25, 1.0]
+          },
+
+          north_bot_vine: {
+            mesh: "north_bot_vine",
+            visible: false,
+            alpha: 0.65,
+            color: [0.0, 0.25, 1.0]
+          },
+
+          vine_cut: {
+            mesh: "vine_cut",
+            visible: false,
+            alpha: 0.65,
+            color: [0.0, 0.25, 1.0]
+          }
+        },
+
+          trackball: {
+            type: TurntablePanTrackball,
+            trackOptions: {
+              startPhi: 0.0,
+              startTheta: 0.0,
+              startDistance: 2.0,
+              minMaxPhi: [-180, 180],
+              minMaxTheta: [-85.0, 85.0],
+              minMaxDist: [0.005, 140.0],
+              startPanX: 0.0,
+              startPanY: 0.0,
+              startPanZ: 0.0,
+              minMaxPanX: [-5.0, 5.0],
+              minMaxPanY: [-20.0, 20.0],
+              minMaxPanZ: [-5.0, 5.0]
+            }
+          }
+        });
+
+        presenter.enableOnHover(true);
+        presenter._onPickedSpot = onPickedSpot;
+        presenter._onEnterSpot = onEnterSpot;
+        presenter._onLeaveSpot = onLeaveSpot;
+
+        presenter.resetTrackball();
+
+        setTimeout(function () {
+          presenter.repaint();
+        }, 120);
+      }
+
+      function onEnterSpot(id) {
+        setActivePanelItem(id);
+      }
+
+      function onLeaveSpot(id) {
+        unhoverPanel();
+
+        if (activeSpot) {
+          setActivePanelItem(activeSpot);
+        } else {
+          clearActivePanelItem();
+        }
+      }
+
+      function clearHighlights() {
+        if (!presenter) return;
+
+        for (var i = 0; i < spotIds.length; i++) {
+          presenter.setSpotVisibilityByName(spotIds[i], false, false);
+        }
+
+        presenter.repaint();
+      }
+
+      function showHighlight(id) {
+        if (!presenter) return;
+
+        clearHighlights();
+
+        presenter.setSpotVisibilityByName(id, true, true);
+        presenter.enableOnHover(true);
+        presenter.repaint();
+      }
+
+      var panelToFace = {
+        south_top_inter: "front",
+        south_sundial: "front",
+        south_mid_inter: "front",
+        south_low_vine: "front",
+        south_bot_inter: "front",
+
+        agnus: "left",
+        christ: "left",
+        falconer: "left",
+
+        north_top_vine: "back",
+        north_upper_inter: "back",
+        north_checkers: "back",
+        north_lower_inter: "back",
+        north_bot_vine: "back",
+
+        vine_cut: "right"
+      };
+
+      function highlightPanel(id) {
+        activeSpot = id;
+        showHighlight(id);
+        setActivePanelItem(id);
+
+        var face = panelToFace[id];
+
+        if (face) {
+          setActiveDirection(face);
+        } else {
+          updateUrlState();
+        }
+      }
+
+      function hoverPanel(id) {
+        showHighlight(id);
+      }
+
+      function unhoverPanel() {
+        if (activeSpot) {
+          showHighlight(activeSpot);
+        } else {
+          clearHighlights();
+        }
+      }
+
+      function onPickedSpot(id) {
+        highlightPanel(id);
+      }
+
+      function clearPanelSelection() {
+        activeSpot = null;
+        clearHighlights();
+        clearActivePanelItem();
+
+        var noneItem = document.querySelector('[data-panel-id="none"]');
+        if (noneItem) noneItem.classList.add("active");
+
+        updateUrlState();
+      }
+
+      function clearActivePanelItem() {
+        var items = document.querySelectorAll(".panel-item");
+
+        items.forEach(function (item) {
+          item.classList.remove("active");
+        });
+      }
+
+      function setActivePanelItem(id) {
+        clearActivePanelItem();
+
+        var activeItem = document.querySelector('[data-panel-id="' + id + '"]');
+
+        if (activeItem) {
+          activeItem.classList.add("active");
+        }
+      }
+
+      var activeFace = null;
+      var validFaces = ["front", "back", "left", "right"];
+
+      function faceDirection(direction) {
+        if (!presenter) return;
+
+        var my_pos = presenter.getTrackballPosition();
+
+        switch (direction) {
+          case "front":
+            my_pos[0] = 0;
+            break;
+          case "right":
+            my_pos[0] = 90;
+            break;
+          case "back":
+            my_pos[0] = 180;
+            break;
+          case "left":
+            my_pos[0] = -90;
+            break;
+          default:
+            return;
+        }
+
+        activeFace = direction;
+        presenter.animateToTrackballPosition(my_pos);
+        updateUrlState();
+      }
+
+      function setActiveDirection(direction) {
+        var directionButtons = document.querySelectorAll(".direction-card");
+
+        directionButtons.forEach(function (button) {
+          button.classList.remove("active");
+        });
+
+        var activeButton = document.querySelector('[data-direction="' + direction + '"]');
+
+        if (activeButton) {
+          activeButton.classList.add("active");
+        }
+
+        faceDirection(direction);
+      }
+
+      function updateUrlState() {
+        var parts = [];
+
+        if (activeFace) parts.push("face=" + encodeURIComponent(activeFace));
+        if (activeSpot) parts.push("panel=" + encodeURIComponent(activeSpot));
+
+        var hash = parts.length ? "#" + parts.join("&") : "";
+
+        history.replaceState(null, "", location.pathname + location.search + hash);
+      }
+
+      function clearAllState() {
+        activeFace = null;
+        activeSpot = null;
+
+        clearHighlights();
+        clearActivePanelItem();
+
+        var directionButtons = document.querySelectorAll(".direction-card");
+
+        directionButtons.forEach(function (button) {
+          button.classList.remove("active");
+        });
+
+        if (presenter) {
+          presenter.resetTrackball();
+        }
+
+        updateUrlState();
+      }
+
+      function applyUrlState() {
+        if (!location.hash) return;
+
+        var params = {};
+
+        location.hash.replace(/^#/, "").split("&").forEach(function (kv) {
+          var pair = kv.split("=");
+
+          if (pair[0]) {
+            params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || "");
+          }
+        });
+
+        if (params.face && validFaces.indexOf(params.face) !== -1) {
+          faceDirection(params.face);
+        }
+
+        if (params.panel && spotIds.indexOf(params.panel) !== -1) {
+          highlightPanel(params.panel);
+        }
+      }
+
+      function toggleFullscreen() {
+        var el = document.getElementById("3dhop");
+        var btn = document.querySelector("#fullscreen-btn img");
+
+        if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement) {
+          (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen).call(document);
+          btn.src = "/bewcastle/3dhop/skins/dark/full.png";
+          btn.alt = "Full Screen";
+        } else {
+          (el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen).call(el);
+          btn.src = "/bewcastle/3dhop/skins/dark/full_on.png";
+          btn.alt = "Exit Full Screen";
+        }
+      }
+
+      function actionsToolbar(action) {
+        if (!presenter) return;
+
+        if (action === "home") clearAllState();
+        else if (action === "zoomin") presenter.zoomIn();
+        else if (action === "zoomout") presenter.zoomOut();
+        else if (action === "light") presenter.enableLightTrackball(!presenter.isLightTrackballEnabled());
+        else if (action === "screenshot") presenter.saveScreenshot();
+        else if (action === "full") presenter.fullscreen();
+        else if (
+          action === "move_up" ||
+          action === "move_down" ||
+          action === "move_left" ||
+          action === "move_right"
+        ) {
+          step(action);
+        }
+      }
+
+      function step(action) {
+        if (!presenter) return;
+
+        var my_pos = presenter.getTrackballPosition();
+        var vstep = 0.10;
+        var hstep = 0.10;
+
+        switch (action) {
+          case "move_up":
+            my_pos[3] += vstep;
+            presenter.animateToTrackballPosition(my_pos);
+            break;
+
+          case "move_down":
+            my_pos[3] -= vstep;
+            presenter.animateToTrackballPosition(my_pos);
+            break;
+
+          case "move_right":
+            var gr1 = Math.PI * my_pos[0] / 180;
+            my_pos[2] -= hstep * Math.cos(gr1);
+            my_pos[4] += hstep * Math.sin(gr1);
+            presenter.animateToTrackballPosition(my_pos);
+            break;
+
+          case "move_left":
+            var gr2 = Math.PI * my_pos[0] / 180;
+            my_pos[2] += hstep * Math.cos(gr2);
+            my_pos[4] -= hstep * Math.sin(gr2);
+            presenter.animateToTrackballPosition(my_pos);
+            break;
+        }
+      }
+
+      function showLoading(message) {
+        var overlay = document.getElementById("loadingOverlay");
+        var text = document.getElementById("loadingText");
+
+        if (text && message) {
+          text.textContent = message;
+        }
+
+        if (overlay) {
+          overlay.style.display = "flex";
+        }
+      }
+
+      function hideLoading() {
+        var overlay = document.getElementById("loadingOverlay");
+
+        if (overlay) {
+          overlay.style.display = "none";
+        }
+      }
+
+      function hookMovePad() {
+        function bind(id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+
+          el.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            actionsToolbar(id);
+          });
+        }
+
+        bind("move_up");
+        bind("move_down");
+      }
+
+      function openInfoTab(tabName) {
+        var tabs = document.querySelectorAll(".tab-button");
+        var contents = document.querySelectorAll(".tab-content");
+
+        tabs.forEach(function (tab) {
+          tab.classList.remove("active");
+        });
+
+        contents.forEach(function (content) {
+          content.classList.remove("active");
+        });
+
+        if (tabName === "poem") {
+          document.querySelector(".tab-button:nth-child(2)").classList.add("active");
+          document.getElementById("poem-content").classList.add("active");
+        } else {
+          document.querySelector(".tab-button:nth-child(1)").classList.add("active");
+          document.getElementById("panels-content").classList.add("active");
+        }
+      }
+
+      $(document).ready(function () {
+        showLoading("Loading model...");
+
+        init3dhop();
+        setup3dhop();
+        hookMovePad();
+
+        setTimeout(function () {
+          hideLoading();
+          applyUrlState();
+        }, 1800);
+      });
+
+      window.addEventListener("resize", function () {
+        if (presenter) presenter.repaint();
+      });
+    </script>
+  </main>
+
+  <div class="footer">
+    <p>&copy; 2026 Visionary Cross Project. All Rights Reserved.</p>
+    <nav>
+      <a href="/frontmatter/history.html">About</a> |
+      <a href="/backmatter/contact.html">Contact</a> |
+      <a href="/frontmatter/home.html">Home</a>
+    </nav>
+  </div>
+
+</body>
+</html>

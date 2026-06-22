@@ -1,0 +1,57 @@
+# =========================================================
+# Bewcastle Cross — site settings
+# =========================================================
+# Part of the Visionary Cross Project. This repository holds the
+# Bewcastle Cross site: the 3DHOP viewer, its pages, panels, and models.
+
+title: Bewcastle Cross
+email: humanitiesinnovationlab@gmail.com
+description: >-
+  A digital edition of the Bewcastle Cross, with an interactive 3D model
+  and panel-by-panel iconographic commentary.
+
+# baseurl: the subpath this project site is served from, so that any links
+# using relative_url resolve to /bewcastle instead of the domain root (which
+# belongs to the user-page repo). The 3DHOP content pages use plain relative
+# paths (../../assets/css/main.css) and work regardless, but this keeps the
+# Jekyll setup identical to the hub. Local `jekyll serve` previews at
+# http://localhost:4000/bewcastle/.
+baseurl: ""
+# url: the base hostname & protocol for the published site.
+url: "https://visionary-cross-project.github.io"
+
+# remote_theme: pull the shared chrome and styling from the hub repo
+# (the user-page site) instead of duplicating them here. At build time Jekyll
+# fetches the hub's _layouts, _includes, and _sass partials, and compiles its
+# assets/css/main.scss into this site's /assets/css/main.css. Edit the styles
+# once, in visionary-cross-project.github.io, and every cross site picks them
+# up on its next build. Any same-named file committed here would override the
+# theme's copy, so this repo deliberately keeps no local style sources.
+remote_theme: visionary-cross-project/visionary-cross-project.github.io
+
+# Per-cross repositories. Used by the shared nav (from the remote theme) and by
+# any page that renders with a Jekyll layout (e.g. the panel stubs). Each cross
+# is a project site under this same domain, so these are root-relative paths;
+# the nav appends page paths like /intro.html, producing /ruthwell/intro.html.
+crosses:
+  ruthwell: "/ruthwell"
+  bewcastle: "/bewcastle"
+  brussels: "/brussels"
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-feed
+  - jekyll-remote-theme
+
+# Sass: partials and assets/css/main.scss now live in the remote theme.
+# "expanded" keeps the generated CSS readable; use "compressed" to minify.
+sass:
+  style: expanded
+
+# Exclude from processing.
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
+  - README.md
