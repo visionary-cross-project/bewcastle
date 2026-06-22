@@ -38,6 +38,11 @@ crosses:
   bewcastle: "/bewcastle"
   brussels: "/brussels"
 
+# Shared header (rendered by the theme's _includes/header.html). header_image is
+# baseurl-relative, so it resolves to /bewcastle/assets/img/head.jpg.
+header_title: "Bewcastle"
+header_image: "/assets/img/head.jpg"
+
 # Build settings
 markdown: kramdown
 plugins:
