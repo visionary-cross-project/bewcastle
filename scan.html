@@ -1,24 +1,64 @@
 ---
 layout: default
 title: "Scanning Bewcastle"
+author: "Marco Callieri"
+editor: "Jocelyn McKnight"
 ---
-<main>
-  <div class="container">
+<main class="article-page">
+    <h1>Scanning the Bewcastle Cross</h1>
 
-    <div class="left">       
-      <img src="/bewcastle/assets/img/bewcastle.png" alt="Project Image" class="hover-image">
-    </div>
+<h2>Data processing</h2>
 
-    <div class="right">
-      <div class="info">
-        <h1>Scanning the Bewcastle Cross</h1>
+<p>The raw data produced by the scanner (i.e. the various single scans) has been processed in various steps. All the significative intermediate steps have been saved and archived, to ensure reproducibility.</p>
 
-        <p> 
-          Coming soon!
-        </p>
+<h2>Cleaning, Alignment, Subsampling</h2>
 
-      </div>
-    </div>
+<p>The raw data produced during scanning has undergone only a minimal cleaning process, to remove the external elements in the scans (support tubes, cables).</p>
 
-  </div>
+<p>Given the size of the 3D dataset, it was necessary to reduce the amount of 3D digitized points, in order to be able to manipulate the object. Using a smart subsampling, that removed oversampled areas, the dataset was re-organized in chunks, to help its management.</p>
+
+<p>The scanning of the cross, due to the presence of the scaffolding, was done in two main chunks, top and bottom. The top and bottom blocks of scans were aligned using the common geometry between the two; the alignment was done in MeshLab, using the ICP geometric alignment filter.</p>
+
+<p>The scanning covered the cross up to its base, but due to the presence of the scaffolding, some parts of the base stone was missing. This area has been integrated by using 3D data coming from a photographic dataset.</p>
+
+<p>In the end, we obtained a 162 Million points point-cloud, describing the whole surface of the Cross.</p>
+
+<h2>Merging</h2>
+
+<p>To obtain a continuous 3D surface, the point-cloud has then been merged using the latest version of the Screened Poisson Merging algorithm. This method is able to preserve local detail, but at the same time ensuring a coherent, triangulated surface.</p>
+
+<p>The algorithm, implemented in MeshLab, is completely automatic, and relies on parameters that have been tweaked to obtain the maximum available detail.</p>
+
+<p>The resulting full-resolution model is made of more than 74 Millions of triangles.</p>
+
+<h2>Texturing</h2>
+
+<p>The photographic dataset was registered in the 3D space using structure-from-motion approaches, in Agisoft PhotoScan, reconstructing camera position, orientation, and intrinsics parameters.</p>
+
+<p>The registered photos were then masked (to exclude foreign objects, like scaffolding tubes), and color-corrected, when needed, using the MacBeth color checker.</p>
+
+<p>The high-res model created in MeshLab was then imported in PhotoScan, and aligned to this texture 3D space. Texture data was projected inside PhotoScan, creating a 16K texture.</p>
+
+<p>Manual texture painting was used to fill-in areas of the stone base and grass that were not covered because occluded by the scaffolding.</p>
+
+<h2>Straightening</h2>
+
+<p>The Cross model was then “straightened” using as a reference the terrain and church corner 3D model, generated using structure-from-motion methods from a photographic dataset of the surroundings of the Cross.</p>
+
+<p>The Vertical Axis is deduced from the church vertical axis, and from a single scan done with a bubble-level, while north-south and east-west axis follow the sides of the cross.</p>
+
+<p>At the moment, it is impossible to obtain a precise geo-referencing of the model, as no GPS or total station data was available during the survey.</p>
+
+<h2>Models and views</h2>
+
+<p>At the end of this process, we have now a “master model” at the maximum resolution, textured and in the correct reference space.</p>
+
+<p>The Master model was used to generate high-resolution (6000x9000) orthographic views of the cross. The four cardinal views have been rendered at a resolution of 0.5mm per pixel, using texture color and enhanced geometry shading. As they are orthographic images, they may be measured and cross-referenced at pixel-level.</p>
+
+<p>The resolution of the master model is very high, and requires a large amount of videocard RAM to be directly visualized. It should be used only for archival and reference purposes.</p>
+
+<p>From this master, we generated multiple simplified, low-resolution models, to be used for interactive browsing, rendering and 3D printing.</p>
+
+<p>Two of the four orthographic views (color and enhanced geometry shading).</p>
+
 </main>
